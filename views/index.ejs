@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>Twoseek</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
+    <script src="/javascripts/angular.js"></script>
+    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+</head>
+<body ng-app="twoseek">
+<script type="text/ng-template" id="/home.html">
+    <div class="page-header">
+        <h1>Twoseek</h1>
+    </div>
+
+    <div ng-repeat="post in posts | orderBy:'-datetime'">
+        <div ng-if="!post.isLiked">
+            <span class="glyphicon glyphicon-thumbs-up"
+            ng-click="likePost(post)"></span>
+            <span style="font-size:20px; margin-left:10px;">
+                {{post.text}}
+            </span>
+        </div>
+    </div>
+
+    <form ng-submit="addPost()"
+    style="margin-top:30px;">
+        <h3>Add a new post</h3>
+
+        <div class="form-group">
+            <input type="text"
+            class="form-control"
+            ng-model="text"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+</script>
+ 
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <ui-view></ui-view>
+        </div>
+    </div>
+</body>
+</html>
