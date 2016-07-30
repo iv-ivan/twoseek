@@ -6,7 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "~1.15.1",
+    "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "ejs": "~2.4.1",
@@ -17,6 +17,9 @@
     "jsonwebtoken": "~7.1.6",
     "passport": "~0.3.2",
     "passport-vkontakte": "~0.3.1",
-    "express-jwt": "~3.4.0"
+    "express-jwt": "~3.4.0",
+    "cookies": "~0.6.1",
+    "session": "~0.1.0",
+    "express-session": "~1.14.0"
   }
 }

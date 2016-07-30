@@ -1,5 +1,58 @@
 var app = angular.module('twoseek', ['ui.router']);
 
+app.factory('auth', ['$http', '$window', '$rootScope', function($http, $window, $rootScope){
+    var auth = {
+    resetSession: function() {
+            this.currentUser = null;
+            this.isLoggedIn = false;
+        },
+
+    register: function(){
+        var url = '/login/vk',
+            width = 1000,
+            height = 650,
+            top = (window.outerHeight - height) / 2,
+            left = (window.outerWidth - width) / 2;
+        $window.open(url, 'vk_login', 'width=' + width + ',height=' + height + ',scrollbars=0,top=' + top + ',left=' + left);
+    },
+    
+    logout: function() {
+        resetSession();
+    },
+
+    success: function(userData) {
+            this.currentUser = userData;
+            this.isLoggedIn = true;
+            $rootScope.$broadcast('scanner-started');
+        },
+
+    };
+    auth.resetSession();
+    return auth;
+}]);
+
+app.run(['$rootScope', '$window', 'auth', function ($rootScope, $window, auth) {  
+    $window.app = {
+        authState: function(state, user) {
+            $rootScope.$apply(function() {
+                switch (state) {
+                    case 'success':
+                        auth.success(user);
+                        break;
+                    case 'fail':
+                        auth.reserSession();
+                        break;
+                }
+
+            });
+        }
+    };
+
+    if ($window.user !== null) {
+        auth.success($window.user);
+    }
+}]);
+
 app.factory('posts', ['$http', function($http){
     var o = { posts: []};
     o.getAll = function() {
@@ -28,16 +81,43 @@ function($stateProvider, $urlRouterProvider) {
             postPromise: ['posts', function(posts){
                 return posts.getAll();
             }]
-        }
-    });
-    $urlRouterProvider.otherwise('home');
+        }})
+        .state('register', {
+        url: '/register',
+        templateUrl: '/register.html',
+        controller: 'AuthCtrl'
+        });
+    $urlRouterProvider.otherwise('register');
 }]);
+
+app.controller('AuthCtrl', [
+'$scope',
+'$state',
+'auth',
+function($scope, $state, auth){
+    $scope.$on('scanner-started', function(event, args) {
+        $state.go("home");
+    });
+    if (auth.isLoggedIn)
+        $state.go("home");
+
+    $scope.register = function(){
+        auth.register();
+    };
+}])
 
 app.controller('MainCtrl', [
 '$scope',
+'$state',
 '$filter',
+'auth',
 'posts',
-function($scope, $filter, posts) {
+function($scope, $state, $filter, auth, posts) {
+    if (!auth.isLoggedIn)
+        $state.go("register");
+
+    $scope.user = auth.currentUser;
+
     $scope.posts = posts.posts;
 
     $scope.addPost = function() {
