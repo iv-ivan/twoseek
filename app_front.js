@@ -1,3 +1,4 @@
+var proxy = require('express-http-proxy');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
