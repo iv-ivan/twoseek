@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "frontend": "node ./bin/www_front"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -20,6 +21,8 @@
     "express-jwt": "~3.4.0",
     "cookies": "~0.6.1",
     "session": "~0.1.0",
-    "express-session": "~1.14.0"
+    "express-session": "~1.14.0",
+    "angular-cookies": "~1.5.8",
+    "express-http-proxy": "~0.7.4"
   }
 }

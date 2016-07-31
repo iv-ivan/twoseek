@@ -2,11 +2,10 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 
 var UserSchema = new mongoose.Schema({
-    userId: {type: String, lowercase: true, unique: true},
+    userId: {type: String, unique: true},
     name: String,
     vkToken: String,
-    picture: String,
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 UserSchema.methods.generateJWT = function() {

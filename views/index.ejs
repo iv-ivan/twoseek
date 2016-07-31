@@ -15,6 +15,9 @@
     </div>
 
     <div> {{user}} </div>
+
+    <button ng-click="logout()"> Logout</button>
+
     <div ng-repeat="post in posts | orderBy:'-datetime'">
         <div ng-if="!post.isLiked">
             <span class="glyphicon glyphicon-thumbs-up"

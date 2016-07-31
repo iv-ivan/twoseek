@@ -17,11 +17,15 @@ app.factory('auth', ['$http', '$window', '$rootScope', function($http, $window, 
     },
     
     logout: function() {
-        resetSession();
+        var scope = this;
+        $http.delete('/auth').success(function() {
+            scope.resetSession();
+            $rootScope.$broadcast('scanner-ended');
+        });
     },
 
     success: function(userData) {
-            this.currentUser = userData;
+            this.currentUser = {name: userData.name, userId: userData.userId};
             this.isLoggedIn = true;
             $rootScope.$broadcast('scanner-started');
         },
@@ -113,10 +117,18 @@ app.controller('MainCtrl', [
 'auth',
 'posts',
 function($scope, $state, $filter, auth, posts) {
+    $scope.$on('scanner-ended', function(event, args) {
+        $state.go("register");
+    });
+
     if (!auth.isLoggedIn)
         $state.go("register");
 
     $scope.user = auth.currentUser;
+     
+    $scope.logout = function(){
+        auth.logout();
+    };
 
     $scope.posts = posts.posts;
 

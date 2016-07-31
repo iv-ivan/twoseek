@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Twoseek', user: req.user ? req.user : null });
 });
 
-router.get('/login/vk', passport.authenticate('vkontakte', {scope : 'user_friends'}));
+router.get('/login/vk', passport.authenticate('vkontakte', {scope : 'friends'}));
 
 router.get('/login/vk/return', 
     passport.authenticate('vkontakte', { failureRedirect: '/auth/fail', successRedirect: '/auth/success'}));
