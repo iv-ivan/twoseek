@@ -8,10 +8,10 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var app = express();
 
-//var mongoose = require('mongoose');
-//var passport = require('passport');
-//require('./models/Posts');
-//require('./models/Users');
+var mongoose = require('mongoose');
+var passport = require('passport');
+require('./models/Posts');
+require('./models/Users');
 require('./config/passport');
 app.use(cookieParser());
 app.use(bodyParser());
@@ -24,7 +24,7 @@ app.use(passport.session());
 //mongoose.connect('mongodb://localhost/twoseek');
 
 var routes = require('./routes/index');
-//var users = require('./routes/users');
+var users = require('./routes/users');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
