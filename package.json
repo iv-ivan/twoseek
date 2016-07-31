@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "frontend": "node ./bin/www_front"
+    "frontend": "node ./bin/www_frontend"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
