@@ -58,15 +58,23 @@ app.run(['$rootScope', '$window', 'auth', function ($rootScope, $window, auth) {
 }]);
 
 app.factory('posts', ['$http', function($http){
-    var o = { posts: []};
+    var o = { friendPosts: [], myPosts: []};
     o.getAll = function() {
         return $http.get('/posts').success(function(data){
-            angular.copy(data, o.posts);
+            angular.copy(data, o.friendPosts);
         });
     };
+
+    o.getMy = function() {
+        return $http.get('/my_posts').success(function(data){
+            angular.copy(data, o.myPosts);
+        });
+    };
+
     o.create = function(post) {
         return $http.post('/posts', post).success(function(data){
-            o.posts.push(data);
+            console.log(data);
+            o.myPosts.push(data);
         });
     };
     return o;
@@ -83,7 +91,7 @@ function($stateProvider, $urlRouterProvider) {
         controller: 'MainCtrl',
         resolve: {
             postPromise: ['posts', function(posts){
-                return posts.getAll();
+                return posts.getAll() && posts.getMy();
             }]
         }})
         .state('register', {
@@ -121,8 +129,9 @@ function($scope, $state, $filter, auth, posts) {
         $state.go("register");
     });
 
-    if (!auth.isLoggedIn)
+    if (!auth.isLoggedIn) {
         $state.go("register");
+    }
 
     $scope.user = auth.currentUser;
      
@@ -130,16 +139,14 @@ function($scope, $state, $filter, auth, posts) {
         auth.logout();
     };
 
-    $scope.posts = posts.posts;
+    $scope.friendPosts = posts.friendPosts;
+    $scope.myPosts = posts.myPosts;
 
     $scope.addPost = function() {
         if (!$scope.text || $scope.text.trim() == '')
             return;
-        posts.create({text: $scope.text, owner: "me", isLiked: false, datetime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')});
+        posts.create({text: $scope.text, datetime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')});
         $scope.text = '';
     };
 
-    $scope.likePost = function(post) {
-        post.isLiked = true;
-    }
 }]);

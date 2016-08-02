@@ -8,7 +8,7 @@ passport.use(new VKStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: 'http://twoseek.tk/login/vk/return',
-    scope: "friends",
+    scope: ["friends", "offline"],
     profileFields: [
         'id',
         'displayName'
@@ -24,7 +24,6 @@ passport.use(new VKStrategy({
                 user = new User({
                     userId: profile.id,
                     name: profile.displayName,
-                    picture: profile.picture,
                     vkToken: accessToken,
                     friends: []
                 });
@@ -77,6 +76,9 @@ passport.use(new VKStrategy({
                         }
                         //add friended
                         user.friends = [];
+                        user.save(function(err) {
+                            if (err) console.log(err);
+                        });
                         for (i in allFriendsIds) {
                             User.findOne({
                                 'userId': allFriendsIds[i]
