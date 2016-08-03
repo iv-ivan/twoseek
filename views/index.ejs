@@ -18,14 +18,22 @@
 
     <button ng-click="logout()"> Logout</button>
 
-    <div ng-repeat="post in posts | orderBy:'-datetime'">
-        <div ng-if="!post.isLiked">
-            <span class="glyphicon glyphicon-thumbs-up"
-            ng-click="likePost(post)"></span>
-            <span style="font-size:20px; margin-left:10px;">
-                {{post.text}}
-            </span>
-        </div>
+    Посты друзей:
+    <div ng-repeat="post in friendPosts | orderBy:'-datetime'">
+        <span class="glyphicon glyphicon-thumbs-up"
+        ng-click="likePost(post)"></span>
+        <span style="font-size:20px; margin-left:10px;">
+            {{post.text}} - {{post.owner}}
+        </span>
+    </div>
+
+    Мои посты:
+    <div ng-repeat="post in myPosts | orderBy:'-datetime'">
+        <span class="glyphicon glyphicon-thumbs-up"
+        ng-click="likePost(post)"></span>
+        <span style="font-size:20px; margin-left:10px;">
+            {{post.text}}
+        </span>
     </div>
 
     <form ng-submit="addPost()"
