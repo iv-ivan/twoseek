@@ -77,6 +77,31 @@ app.factory('posts', ['$http', function($http){
             o.myPosts.push(data);
         });
     };
+
+    o.likePost = function(post) {
+        return $http.put('/posts/' + post._id + '/like')
+        .success(function(data){
+            post.isLiked = true;
+        });
+    };
+
+    o.sharePost = function(post, user_id) {
+        return $http.put('/posts/' + post._id + '/share/' + user_id)
+        .success(function(data){
+            post.sharedTo.push(user_id);
+            post.likedBy.splice(post.likedBy.indexOf(user_id), 1);
+        });
+    };
+    return o;
+}]);
+
+app.factory('friends', ['$http', function($http){
+    var o = {friends: []};
+    o.getFriends = function() {
+        return $http.get('/friends').success(function(data){
+            angular.copy(data, o.friends);
+        }); 
+    };
     return o;
 }]);
 
@@ -92,6 +117,9 @@ function($stateProvider, $urlRouterProvider) {
         resolve: {
             postPromise: ['posts', function(posts){
                 return posts.getAll() && posts.getMy();
+            }],
+            friendsPromise: ['friends', function(friends){
+                return friends.getFriends();
             }]
         }})
         .state('register', {
@@ -124,7 +152,8 @@ app.controller('MainCtrl', [
 '$filter',
 'auth',
 'posts',
-function($scope, $state, $filter, auth, posts) {
+'friends',
+function($scope, $state, $filter, auth, posts, friends) {
     $scope.$on('scanner-ended', function(event, args) {
         $state.go("register");
     });
@@ -141,12 +170,21 @@ function($scope, $state, $filter, auth, posts) {
 
     $scope.friendPosts = posts.friendPosts;
     $scope.myPosts = posts.myPosts;
-
+    $scope.friends = friends.friends;
+    
     $scope.addPost = function() {
         if (!$scope.text || $scope.text.trim() == '')
             return;
         posts.create({text: $scope.text, datetime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')});
         $scope.text = '';
+    };
+
+    $scope.likePost = function(post) {
+        posts.likePost(post);
+    };
+
+    $scope.sharePost = function(post, user_id) {
+        posts.sharePost(post, user_id);
     };
 
 }]);

@@ -5,7 +5,9 @@ var UserSchema = new mongoose.Schema({
     name: String,
     vkToken: String,
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    likeYours: [],
+    shareToYou: []
 });
 
 mongoose.model('User', UserSchema);

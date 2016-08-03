@@ -15,7 +15,9 @@
     </div>
 
     <div> {{user}} </div>
-
+    <div ng-repeat="friend in friends">
+        {{friend}}
+    </div>
     <button ng-click="logout()"> Logout</button>
 
     Посты друзей:
@@ -29,10 +31,17 @@
 
     Мои посты:
     <div ng-repeat="post in myPosts | orderBy:'-datetime'">
-        <span class="glyphicon glyphicon-thumbs-up"
-        ng-click="likePost(post)"></span>
         <span style="font-size:20px; margin-left:10px;">
             {{post.text}}
+            <div ng-repeat="userWhoLiked in post.likedBy">
+                <span class="glyphicon glyphicon-thumbs-up"
+                ng-click="sharePost(post, userWhoLiked)"></span>
+                {{userWhoLiked}}
+            </div>
+            <div ng-repeat="sharedToUser in post.sharedTo">
+                {{sharedToUser}}
+            </div>
+
         </span>
     </div>
 
