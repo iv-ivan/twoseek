@@ -5,77 +5,85 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"></script>
     <script src="/javascripts/angular.js"></script>
-    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
 </head>
 <body ng-app="twoseek">
 
 <script type="text/ng-template" id="/home.html">
-    <div class="page-header">
-        <h1>Twoseek</h1>
-    </div>
-
-    <div> {{user}} </div>
-    <div ng-repeat="friend in friends">
-        {{friend}}
-    </div>
-    <button ng-click="logout()"> Logout</button>
-
-    Посты друзей:
-    <div ng-repeat="post in friendPosts | orderBy:'-datetime'">
-        <span class="glyphicon glyphicon-thumbs-up"
-        ng-click="likePost(post)"></span>
-        <span style="font-size:20px; margin-left:10px;">
-            {{post.text}} - {{post.owner}}
-        </span>
-    </div>
-
-    Мои посты:
-    <div ng-repeat="post in myPosts | orderBy:'-datetime'">
-        <span style="font-size:20px; margin-left:10px;">
-            {{post.text}}
-            <div ng-repeat="userWhoLiked in post.likedBy">
-                <span class="glyphicon glyphicon-thumbs-up"
-                ng-click="sharePost(post, userWhoLiked)"></span>
-                {{userWhoLiked}}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Тусик</a>
             </div>
-            <div ng-repeat="sharedToUser in post.sharedTo">
-                {{sharedToUser}}
+            <div class="nav navbar-nav navbar-right">
+                <button class="btn btn-primary navbar-btn" ng-click="logout()">Выйти</button>
             </div>
-
-        </span>
-    </div>
-
-    <form ng-submit="addPost()"
-    style="margin-top:30px;">
-        <h3>Add a new post</h3>
-
-        <div class="form-group">
-            <input type="text"
-            class="form-control"
-            ng-model="text"></input>
-        </div>
-        <button type="submit" class="btn btn-primary">Post</button>
-    </form>
-</script>
-
-<script type="text/ng-template" id="/register.html">
-    <div class="page-header">
-        <h1>Twoseek</h1>
-	<h2>Уникальное место для уникальных людей.</h2>
-	<h2>Ставьте перед собой самые грандиозные цели, 
-становитесь лучше, а мы поможем вам найти близких по духу.</h2>
-    </div>
-
-    <button class="btn btn-primary" ng-click="register()"> Sign in using VK</button>
-</script>
- 
+        <div>
+    </nav>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <ui-view></ui-view>
+            <div> {{user}} </div>
+            <h2>Друзья:</h2>
+            <div ng-repeat="friend in friends">
+                {{friend}}
+            </div>
+
+            Посты друзей:
+            <div ng-repeat="post in friendPosts | orderBy:'-datetime'">
+                <span ng-if="post.owner == '' && !post.isLiked" class="glyphicon glyphicon-heart-empty"
+                ng-click="likePost(post)"></span>
+                <span ng-if="post.owner == '' && post.isLiked" class="glyphicon glyphicon-heart""></span>
+                <span ng-if="post.owner != ''" class="glyphicon glyphicon-ok""></span>
+                <span style="font-size:20px; margin-left:10px;">
+                    {{post.text}} - {{friends[post.owner]}}
+                </span>
+            </div>
+
+            Мои посты:
+            <div ng-repeat="post in myPosts | orderBy:'-datetime'">
+                <span style="font-size:20px; margin-left:10px;">
+                    {{post.text}}
+                    <div ng-repeat="userWhoLiked in post.likedBy">
+                        <span class="glyphicon glyphicon-thumbs-up"
+                        ng-click="sharePost(post, userWhoLiked)"></span>
+                        {{friends[userWhoLiked]}}
+                    </div>
+                    <div ng-repeat="sharedToUser in post.sharedTo">
+                        {{friends[sharedToUser]}}
+                    </div>
+                </span>
+                <div>----------</div>
+            </div>
+
+            <form ng-submit="addPost()"
+            style="margin-top:30px;">
+                <h3>Add a new post</h3>
+
+                <div class="form-group">
+                    <input type="text"
+                    class="form-control"
+                    ng-model="text"></input>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
         </div>
     </div>
-<script type="text/javascript">  
-    window.user = <%- JSON.stringify(user) %>;
 </script>
+
+    <script type="text/ng-template" id="/register.html">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Тусик</a>
+                </div>
+                <button class="btn btn-primary navbar-btn" ng-click="register()">Войти через VK</button>
+            <div>
+        </nav>
+    </script>
+ 
+    <ui-view></ui-view>
+
+    <script type="text/javascript">  
+        window.user = <%- JSON.stringify(user) %>;
+    </script>
 </body>
 </html>

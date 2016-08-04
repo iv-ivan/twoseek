@@ -67,8 +67,8 @@ router.get('/posts', function(req, res, next) {
                         for (var j = 0; j < postsNum; ++j) {
                             var postToAdd = friend.posts[j].toObject();
                             if (friend.posts[j].sharedTo.indexOf(req.user["_id"]) == -1)
-                                delete postToAdd.owner;
-                            if (postToAdd.likedBy.indexOf(req.user["_id"]) != -1)
+                                postToAdd.owner = '';
+                            if (friend.posts[j].likedBy.indexOf(req.user["_id"]) != -1)
                                 postToAdd.isLiked = true;
                             else
                                 postToAdd.isLiked = false;

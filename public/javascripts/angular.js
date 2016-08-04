@@ -44,7 +44,7 @@ app.run(['$rootScope', '$window', 'auth', function ($rootScope, $window, auth) {
                         auth.success(user);
                         break;
                     case 'fail':
-                        auth.reserSession();
+                        auth.resetSession();
                         break;
                 }
 
@@ -170,7 +170,10 @@ function($scope, $state, $filter, auth, posts, friends) {
 
     $scope.friendPosts = posts.friendPosts;
     $scope.myPosts = posts.myPosts;
-    $scope.friends = friends.friends;
+    $scope.friends = {};
+    for (var i = 0; i < friends.friends.length; ++i) {
+        $scope.friends[friends.friends[i]["_id"]] = friends.friends[i];
+    }
     
     $scope.addPost = function() {
         if (!$scope.text || $scope.text.trim() == '')
